@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="kalp.css">
+    <title>Seni seviyorum</title>
+    <style> 
+    body {
+  background-color: #fb454e;
+}
+
+p {
+  color: #fb454e;
+  font-size: 3em;
+  height: 100%;
+  left: 0;
+  margin: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
+}
+
+p > span {
+  position: absolute;
+}
+
+.heart {
+  -webkit-animation: beat 3s infinite linear, beatBackground 3s infinite linear;
+          animation: beat 3s infinite linear, beatBackground 3s infinite linear;
+  background-color: #d1000a;
+  border-radius: 10% 10% 7%/7% 10%;
+  height: 100px;
+  margin: 45% auto;
+  margin: calc(50vh - 50px) auto;
+  position: relative;
+  transform: rotate(45deg) scale(1);
+  width: 100px;
+}
+@-webkit-keyframes beat {
+  0% {
+    transform: rotate(45deg) scale(1);
+  }
+  10% {
+    transform: rotate(45deg) scale(1.3);
+  }
+  20% {
+    transform: rotate(45deg) scale(1);
+  }
+  100% {
+    transform: rotate(45deg) scale(1);
+  }
+}
+@keyframes beat {
+  0% {
+    transform: rotate(45deg) scale(1);
+  }
+  10% {
+    transform: rotate(45deg) scale(1.3);
+  }
+  20% {
+    transform: rotate(45deg) scale(1);
+  }
+  100% {
+    transform: rotate(45deg) scale(1);
+  }
+}
+@-webkit-keyframes beatBackground {
+  0% {
+    box-shadow: 0 0 0 0 #ab0009;
+  }
+  8% {
+    box-shadow: 0 0 0 0 #ab0009;
+  }
+  55% {
+    box-shadow: 0 0 100px 100vw rgba(171, 0, 9, 0);
+  }
+  100% {
+    box-shadow: 0 0 100px 100vw rgba(171, 0, 9, 0);
+  }
+}
+@keyframes beatBackground {
+  0% {
+    box-shadow: 0 0 0 0 #ab0009;
+  }
+  8% {
+    box-shadow: 0 0 0 0 #ab0009;
+  }
+  55% {
+    box-shadow: 0 0 100px 100vw rgba(171, 0, 9, 0);
+  }
+  100% {
+    box-shadow: 0 0 100px 100vw rgba(171, 0, 9, 0);
+  }
+}
+
+.heart::before, .heart::after {
+  background-color: #d1000a;
+  border-radius: 50%;
+  content: "";
+  height: 100px;
+  position: absolute;
+  width: 100px;
+}
+
+.heart::after {
+  top: -48%;
+}
+
+.heart::before {
+  left: -48%;
+}
+    
+    
+    
+    
+    
+    
+    
+    </style>
+</head>
+<body>
+	<div class="heart"></div>
+	<p class="text"></p>
+</div>
+<script>
+function TextChanger(list, selector) {
+    var loveSentences = list,
+            currentSentenceIndex = 0,
+            topPosition,
+        bottomPosition,
+        lettersCount,
+        text,
+        cache = [],
+        oldParagraph = document.querySelector(selector),
+        getNextLoveSentence = function() {
+          var nextSentence = loveSentences[currentSentenceIndex];
+          currentSentenceIndex += 1;
+          if (currentSentenceIndex === loveSentences.length) {
+            currentSentenceIndex = 0;
+          }
+          return nextSentence;
+        },
+        getWords = function(words, from, to) {
+            var newWords = [];
+            from -= 1;
+            to -= 1;
+            for(; from <= to; from++) {
+            newWords.push(words[from]);
+            }
+            return newWords.join(' ').split('');
+        },
+        createLetter = function(val, index) {
+            if (val !== " ") {
+              var letter = document.createElement('span'); 
+              if (topPosition) {
+                letter.style.top = topPosition;
+              } else {
+                letter.style.bottom = bottomPosition;
+              }
+              letter.style.left = (20 + (Math.ceil(60 / (lettersCount - 1)) * (index))) + "%";
+              letter.textContent = val;
+              return letter;
+            }
+        },
+        addLetters = function(val, index) {
+          var letter = createLetter(val, index);
+          if (letter !== undefined) {
+            text.appendChild(letter);
+          }
+        };
+    
+    this.addSentence = function(sentence) {
+      if (loveSentences.indexOf(sentence) > -1) {
+        alert('Sorry, this sentence is already included.');
+      } else {
+      loveSentences.push(sentence);
+      }
+    };  
+    
+    this.removeSentence = function(sentence) {
+      var index = loveSentences.indexOf(sentence);
+      loveSentences.splice(index, 1);
+      cache.splice(index, 1);
+      if (index < currentSentenceIndex) {
+        currentSentenceIndex -= 1;
+      }
+    };  
+    
+      this.displaySentence = function() {
+          var currentLoveWord = getNextLoveSentence(),
+          words = currentLoveWord.split(' '),
+          letters = currentLoveWord.split(''),
+          wordsCount = words.length,
+          newParagraph = document.createElement('p');
+      
+      if (cache[currentSentenceIndex - 1]) {
+        oldParagraph.parentNode.replaceChild(cache[currentSentenceIndex - 1], oldParagraph);
+        oldParagraph = cache[currentSentenceIndex - 1];
+        return false;
+      }
+          
+      text = document.createDocumentFragment();
+          lettersCount = letters.length;
+  
+          if (wordsCount === 1 && lettersCount > 1) {
+            topPosition = "15%";
+            letters.forEach(addLetters);
+          } else if (wordsCount === 2 && lettersCount <= 10) {
+            topPosition = "15%";
+            letters.forEach(addLetters);
+          } else if (wordsCount === 2 && lettersCount > 10) {
+            topPosition = "15%";
+            bottomPosition = "15%";
+            lettersCount = getWords(words, 1, 1).length;
+            getWords(words, 1, 1).forEach(addLetters);
+            topPosition = undefined;
+            lettersCount = getWords(words, 2, 2).length;
+            getWords(words, 2, 2).forEach(addLetters);
+          } else if (wordsCount >= 3 && lettersCount <= 10) {
+            topPosition = "15%";
+            letters.forEach(addLetters);
+          } else if (wordsCount >= 3 && lettersCount > 10) { 
+            topPosition = "15%";
+            bottomPosition = "15%";
+            lettersCount = getWords(words, 1, Math.ceil(wordsCount / 2)).length; 
+            getWords(words, 1, Math.ceil(wordsCount / 2)).forEach(addLetters);
+            topPosition = undefined;
+            lettersCount = getWords(words, Math.ceil((wordsCount / 2) + 1), wordsCount).length;
+            getWords(words, Math.ceil((wordsCount / 2) + 1), wordsCount).forEach(addLetters);
+          } else if (lettersCount === 1) {
+            var letter = document.createElement('span');
+            letter.textContent = currentLoveWord[0];
+            letter.style.top = "15%";
+            letter.style.left = "49%";
+            text.appendChild(letter);
+          }
+      
+      newParagraph.className = "text";
+      newParagraph.appendChild(text);
+      oldParagraph.parentNode.replaceChild(newParagraph, oldParagraph);
+      oldParagraph = newParagraph;
+      cache.push(newParagraph);
+      }; 
+  }
+  
+  var changer = new TextChanger(["Seni", 
+                  "Seviyorum",
+                  "Nazlı",],
+                  ".text");
+  changer.displaySentence();
+  window.setInterval(changer.displaySentence, 3000);
+
+
+
+
+
+
+
+
+
+</script>
+</body>
+</html>
